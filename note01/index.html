@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>reveal.js</title>
+
+    <link rel="stylesheet" href="../dist/reset.css" />
+    <link rel="stylesheet" href="../dist/reveal.css" />
+    <link rel="stylesheet" href="../dist/theme/simple.css" />
+
+		<style>
+			p {
+				font-size: 2rem;
+				text-align: justify;
+			}
+
+			h3 {
+				margin-bottom: 2rem;
+			}
+		</style>
+
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="../plugin/highlight/monokai.css" />
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <section><h2>По итогам news-api</h2></section>
+          <section id="grid-code">
+            <section>
+              <h3>Гриды для адаптива 👍</h3>
+              <pre><code data-line-numbers="3-4|11-14|17-20">
+		.news {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 1%;
+			padding: 0 1.3%;
+			max-width: 1920px;
+			margin: 0 auto;
+		}
+
+		@media(max-width: 1361px) {
+			.news {
+					grid-template-columns: repeat(2, 1fr);
+			}
+		}
+														
+		@media(max-width: 1020px) {
+			.news {
+				grid-template-columns: repeat(1, 1fr);
+			} 
+		}
+								</code></pre>
+            </section>
+          </section>
+          <section id="grid-links">
+            <h3>Полезные ссылки про гриды</h3>
+            <ul>
+              <li>
+                <a href="https://css-tricks.com/snippets/css/complete-guide-grid/">Исчерпывающий гайд на CSS-trics</a>
+              </li>
+              <li>
+                <a href="https://cssgrid-generator.netlify.app/">Генератор гридов</a>
+              </li>
+              <li>
+                <a href="https://www.youtube.com/playlist?list=PLu8EoSxDXHP5CIFvt9-ze3IngcdAc2xKG">Видео уроки</a>
+              </li>
+            </ul>
+          </section>
+          <section id="env">
+            <h3>Environment в гитхабе помогает оживить задеплоенную версию</h3>
+            <p>Переменные в экшенах для гитхаба отлично подходят для указания актуального эндпойнта и паролей-секретов для апи</p>
+            <img src="./images/github-env.jpeg" alt="Screenshot of github settings for Environment" class="image" style="max-height: 400px;"/>
+          </section>
+          <section id="env-link">
+            <h3>Полезные ссылки</h3>
+            <ul>
+              <li>
+                <a href="https://docs.github.com/en/actions/learn-github-actions/variables">Инструкция про переменные в экшенах на гитхабе</a>
+              </li>
+              <li>
+                <a href="https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions">Инструкция, как использовать секреты и не рассекретить их</a>
+              </li>
+              <li>
+                <a href="https://github.com/marketplace?type=actions">Маркетплейс готовых экшенов</a>
+              </li>
+            </ul>
+          </section>
+					<section id="assert">
+						<h3>Полезный хелпер</h3>
+						<!-- prettier-ignore -->
+						<pre>
+							<code>
+	export function assertIsDefined<T>(val: T): asserts val is NonNullable<T> {
+		if (val == null) {
+			throw new Error(`Expected 'val' to be defined, but received ${val}`);
+		}
+	}
+							</code>
+						</pre>
+						<p>Но: думайте, подходит ли вам всегда такой вариант. Точно ли вы хотите показать ошибку, как будете обрабатывать.</p>
+					</section>
+        </section>
+				<section id="for-improve">
+					<section><h2>Что можно улучшить</h2></section>
+					<section id="paths">
+						<h3>Make your paths great again</h3>
+						<!-- prettier-ignore -->
+						<pre>
+							<code>
+	// 😐 это работает и всё в целом ок 
+	import { assertIsDefined } from '../../helpers/helpers';
+	import Controller from '../../components/controller/controller';
+							</code>
+						</pre>
+						<!-- prettier-ignore -->
+						<pre>
+							<code>
+	// 🤩 но можно сделать чище
+	import { assertIsDefined } from 'helpers/types';
+	import Controller from 'components/controller';
+														</code>
+						</pre>
+						
+					</section>
+					<section id="paths-how">
+						<h3>Как лучше делать</h3>
+						<ul style="font-size: 2rem;">
+							<li style="margin-bottom: 1rem;">В папках с хелперами и тп не создавать один файл, в которой пихается всё. 
+								Разделять на кусочки функциональности, называть осмысленно. 
+							</li>
+							<li style="margin-bottom: 1rem;">Указать в tsconfig baseUrl: 'src', чтобы работали абсолютные импорты (не подходит для монорепы) - <a href='https://medhat.dev/blog/paths-and-baseUrl-in-tsconfig.json/'>как настроить</a></li>
+							<li style="margin-bottom: 1rem;">Добавлять файл index.ts c экспортом компонента<sup>*</sup></li>
+							<li><sup>*</sup><a href='https://javascript.info/import-export#re-export'>Про реэкспорты</a>, <a href='https://medium.com/@alonmiz1234/why-you-should-avoid-index-js-3321a9902120'>про возможные проблемы index.js</a></li>
+						</ul>
+						<aside class="notes">
+							Показать настройку на примере репозитория
+						</aside>
+					</section>
+					<section id="eslint">
+						<h3>Будьте последовательны</h3>
+						<!-- prettier-ignore -->
+						<pre>
+							<code>
+	"rules": {
+		"no-debugger": "off",
+		"no-console": 0,
+		"class-methods-use-this": "off",
+		"@typescript-eslint/no-explicit-any": 2
+	}
+							</code>
+						</pre>
+						<aside class="notes">
+							Почему это проблема: неконсистентно => надо помнить 2 системы обозначений. 
+							Что значит 2? Что значит 'off'? Как они соотносятся? 
+						</aside>
+					</section>
+					<section id="magic">
+						<h3>Магия в коде - 🤯</h3>
+						<p>Магические числа - это числа, смысл которых ясен только написавшему программисту (чаще всего на момент написания).</p>
+						<p style="margin-top: 2rem; font-weight: 500;">Почему это проблема?</p>
+						<ul style="font-size: 2rem;">
+							<li style="margin-bottom: 1rem;">Непонятно, что это за число, можно ли изменить его или что-то сломается</li>
+							<li style="margin-bottom: 1rem;">Может встречаться в нескольких местах => придётся править в нескольких местах, и где-то вы точно забудете</li>
+						</ul>
+					</section>
+					<section id="magic-example">
+						<h3>Почему 10, а не 4️⃣2️⃣?</h3>
+						<!-- prettier-ignore -->
+						<pre>
+							<code>
+	const news = data.length >= 10 ? data.filter((_item, idx) => idx < 10) : data;
+
+	// some code
+
+	newsMetaDate.textContent = item.publishedAt.slice(0, 10).split('-').reverse().join('-');
+							</code>
+						</pre>
+						
+					</section>
+					<section id="optional">
+						<h3>Optional chaining</h3>
+						<!-- prettier-ignore -->
+						<pre>
+							<code>
+	data?.nested?.obj?.name
+							</code>
+						</pre>
+						<p>Optional chaining - очень удобная штука в JS, но</p>
+						<ul style="font-size: 2rem; margin-bottom: 2rem;"> 
+							<li style="margin-bottom: 1rem;">знаки вопроса влияют на читабельность; </li>
+							<li style="margin-bottom: 1rem;">ваш код возможно будет транспайлиться в старый стандарт, и там ? создаст дополнительные строки кода - бандл будет больше </li>
+						</ul>
+					</section>
+					<section id="functions">
+						<h3>Аргументы для функции</h3>
+						<ul style="font-size: 2rem;">
+							<li style="margin-bottom: 1rem;">Максимум 3 аргумента. Если больше - уберите их в {}</li>
+							<li style="margin-bottom: 1rem;">Сначала обязательные, потом опциональные</li>
+							<li style="margin-bottom: 1rem;">Дефолтные значения не всегда стоит указывать в объявлении функции, чтобы не переусложнять</li>
+						</ul>
+					</section>
+				</section>
+				<section id="namespaces">
+					<h3>global in TS</h3>
+					<p><a href='https://www.totaltypescript.com/how-to-properly-type-window'>Рабочая инструкция с реальным примером</a>, когда может понадобится объявить глобальный тип - вообще очень рекомендую
+					почитывать материалы Matt Pocock, он настоящий волшебник-практик тайпскрипта</p>
+					<p>То есть вы можете в любом файле ts сделать declare или создать global.d.ts - и в нем уже без всякого declare просто описать тип.</p>
+					<p>Еще интересно прочитать <a href='https://stackoverflow.com/questions/42233987/how-to-configure-custom-global-interfaces-d-ts-files-for-typescript'>вот этот вопрос-ответ на stackoverflow</a>, 
+						чтобы задуматься лишний раз, нужны ли нам глобальные типы и как это работает. 
+					</p>
+					<p>Ну и, конечно, <a href='https://www.typescriptlang.org/docs/handbook/namespaces-and-modules.html'>документация TS про модули и неймспейсы</a> - в которой тоже всячески рекомендуются модули, как 
+						более современный и удобный стандарт.
+					</p>
+
+					
+					<p></p>
+				</section>
+				<section id="code-review">
+					<h3>По итогам сode reivew</h3>
+					<p>Вы молодцы!</p>
+					<ul style="font-size: 2rem;">
+						<li style="margin-bottom: 1rem;">Классно, что были рекомендации по функциональности</li>
+						<li style="margin-bottom: 1rem;">Хвалить людей - хорошо, только хвалите за стоящее</li>
+					</ul>
+				</section>
+				<section id="presentations">
+					<h3>Что по темам для презентаций?</h3>
+				</section>
+      </div>
+    </div>
+
+    <script src="../dist/reveal.js"></script>
+    <script src="../plugin/notes/notes.js"></script>
+    <script src="../plugin/markdown/markdown.js"></script>
+    <script src="../plugin/highlight/highlight.js"></script>
+    <script>
+      // More info about initialization & config:
+      // - https://revealjs.com/initialization/
+      // - https://revealjs.com/config/
+      Reveal.initialize({
+        hash: true,
+
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
+      });
+    </script>
+  </body>
+</html>
