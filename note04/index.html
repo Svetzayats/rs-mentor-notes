@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>reveal.js</title>
+
+    <link rel="stylesheet" href="../dist/reset.css" />
+    <link rel="stylesheet" href="../dist/reveal.css" />
+    <link rel="stylesheet" href="../dist/theme/simple.css" />
+
+    <style>
+      p {
+        font-size: 2rem;
+        text-align: justify;
+      }
+
+      h2 {
+        font-size: 1.7em !important;
+      }
+
+      h3 {
+        margin-bottom: 2rem;
+      }
+
+      .code-example {
+        font-size: 1.2rem;
+        text-align: left;
+      }
+    </style>
+
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="../plugin/highlight/monokai.css" />
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <section>
+            <h2>React Hooks</h2>
+          </section>
+
+          <section>
+            <h2>Что нужно помнить</h2>
+            <ul style="font-size: 2rem">
+              <li style="margin-bottom: 1rem">Вызываем только на верхнем уровне, не в циклах и условиях</li>
+              <li style="margin-bottom: 1rem">Вызываем только из React function components и кастомных хуков</li>
+              <li style="margin-bottom: 1rem">Не передаем как props и не модифицируем (нет high order hooks)</li>
+            </ul>
+            <p>Подробности: <a href="https://react.dev/reference/rules">правила React</a> из документации</p>
+          </section>
+
+          <section>
+            <h2>useEffect</h2>
+            <p>При использовании нужно понимать, что он ТОЧНО нужен, никак по-другому задачу не решить. Это магия, которая должна применяться в редких случаях: для синхронизации с внешней системой. Например: получить данные с сервера, отрегаировать на изменения DOM и тд.</p>
+            <!-- <div class="code-example">
+              <pre><code data-line-numbers="1-3|5-7|9-11|13-15">
+// ❌ Плохо - отсутствие зависимостей
+useEffect(() => {
+  fetchData(userId);
+});
+
+// ✅ Хорошо - явные зависимости
+useEffect(() => {
+  fetchData(userId);
+}, [userId]);
+
+// ✅ Очистка эффектов
+useEffect(() => {
+  const subscription = subscribe();
+  return () => subscription.unsubscribe();
+}, []);
+              </code></pre>
+            </div> -->
+          </section>
+          <section>
+            <h2>useEffect: когда не использовать</h2>
+            <ul style="font-size: 1.5rem">
+              <li>когда нужно подготовить данные для рендера: если что-то можно рассчитать на основе существующих данных</li>
+              <li>когда нужно изменить стейт из-за изменений пропсов</li>
+              <li>когда обрабатываем какие-то действия пользователя</li>
+
+              <li>когда хотим обновить стейт родителя из ребенка</li>
+              <li>и еще всякие другие случаи!</li>
+            </ul>
+            <p>Внимательно и на несколько раз прочитать <a href="https://react.dev/learn/you-might-not-need-an-effect">You might not need an effect</a>: там разобраны все случаи, когда не нужно использовать useEffect + даны примеры, как поправить.</p>
+          </section>
+          <section>
+            <h2>useCallback and useMemo</h2>
+            <p>Как и useEffect, надо использовать мудро :)</p>
+            <ul style="font-size: 1.5rem">
+              <li>Хорошая практика использовать их для значения и функции хэндлера в React Provider: чтобы лишний раз контекст не триггерил перерендер подписчиков</li>
+              <li>Когда передаем значения/коллбеки как пропсы в мемоизированный компонент</li>
+            </ul>
+            <p>Надо думать, ЗАЧЕМ мы хотим запомнить, понимать, что это доп расходы памяти + React будет отслеживать зависимости, то есть это не бесплатно в любом случае. В большинстве случаев функции пересоздаются во время рендера — и это ОК.</p>
+          </section>
+          <section>
+            <h2>Домашнее задание</h2>
+            Прочитать, когда не стоит использовать хуки, посмотреть на свой код и найти хотя бы один хук, без которого можно обойтись.
+          </section>
+        </section>
+      </div>
+    </div>
+
+    <script src="../dist/reveal.js"></script>
+    <script src="../plugin/notes/notes.js"></script>
+    <script src="../plugin/markdown/markdown.js"></script>
+    <script src="../plugin/highlight/highlight.js"></script>
+    <script>
+      // More info about initialization & config:
+      // - https://revealjs.com/initialization/
+      // - https://revealjs.com/config/
+      Reveal.initialize({
+        hash: true,
+
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
+      });
+    </script>
+  </body>
+</html>
